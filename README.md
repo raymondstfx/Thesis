@@ -4,7 +4,19 @@ Honours Thesis
 ## Project Description
 This project references the implementation of [MobileCount](https://github.com/ChenyuGAO-CS/MobileCount) and modifies upon it.
 
+## Pretrained model
+**ShanghaiA**
+
+**ShanghaiB**
+
+**UCF_QNRF:** [download](https://www.crcv.ucf.edu/data/ucf-qnrf/)
+
+A prepared collection is ready for download on [Baidu Netdisk](https://pan.baidu.com/s/1g2-w97B7YuqOHCR2dNBunw).
+
+
 ## Virtual Environment
+**Python Version:** 3.10.11
+
 Install [pyenv-win](https://github.com/pyenv-win/pyenv-win) first, then create a new virtual environment:
 ```bash
 python -m venv .venv
