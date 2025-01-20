@@ -4,6 +4,11 @@ Honours Thesis
 ## Project Description
 This project references the implementation of [MobileCount](https://github.com/ChenyuGAO-CS/MobileCount) and modifies upon it.
 
+**Project:**
+```bash
+git clone https://github.com/raymondstfx/Thesis.git
+```
+
 ## Pretrained model
 **ShanghaiA**
 
