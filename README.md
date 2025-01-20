@@ -11,7 +11,7 @@ This project references the implementation of [MobileCount](https://github.com/C
 
 **UCF_QNRF:** [download](https://www.crcv.ucf.edu/data/ucf-qnrf/)
 
-A prepared collection is ready for download on [Baidu Netdisk](https://pan.baidu.com/s/1g2-w97B7YuqOHCR2dNBunw).
+A prepared collection is ready for download on [Baidu Netdisk](https://pan.baidu.com/s/1g2-w97B7YuqOHCR2dNBunw). Password: vb4n 
 
 
 ## Virtual Environment
