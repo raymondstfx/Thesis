@@ -48,25 +48,25 @@ class RandomHorizontallyFlip(object):
 
 
 def adap_net(img, den, scale=32):
-    if img.shape[0] % scale:  # 如果高不能被8整除
-        # 记录需要填充的高度
+    if img.shape[0] % scale:  # If the height is not divisible by 8
+        #Record the height that needs to be filled
         pad_height = scale - img.shape[0] % scale
         left, right = 0, 0
         top, bottom = int(pad_height / 2), pad_height - int(pad_height / 2)
         img = cv2.copyMakeBorder(img, int(top), int(bottom), int(left), int(right), cv2.BORDER_CONSTANT,
-                                 value=[0, 0, 0])  # 从图像边界向上,下,左,右扩的像素数目
+                                 value=[0, 0, 0])  # The number of pixels to expand upward, downward, left, and right from the image boundary
         den = cv2.copyMakeBorder(den, int(top), int(bottom), int(left), int(right), cv2.BORDER_CONSTANT,
-                                 value=[0, 0, 0])  # 从图像边界向上,下,左,右扩的像素数目
+                                 value=[0, 0, 0])  # The number of pixels to expand upward, downward, left, and right from the image boundary
 
-    if img.shape[1] % scale:  # 如果宽不能被8整除
-        # 记录需要填充的高度
+    if img.shape[1] % scale:  # If the width is not divisible by 8
+        #Record the height that needs to be filled
         pad_width = scale - img.shape[1] % scale
         left, right = int(pad_width / 2), pad_width - int(pad_width / 2)
         top, bottom = 0, 0
         img = cv2.copyMakeBorder(img, int(top), int(bottom), int(left), int(right), cv2.BORDER_CONSTANT,
-                                 value=[0, 0, 0])  # 从图像边界向上,下,左,右扩的像素数目
+                                 value=[0, 0, 0])  # The number of pixels to expand upward, downward, left, and right from the image boundary
         den = cv2.copyMakeBorder(den, int(top), int(bottom), int(left), int(right), cv2.BORDER_CONSTANT,
-                                 value=[0, 0, 0])  # 从图像边界向上,下,左,右扩的像素数目
+                                 value=[0, 0, 0])  # The number of pixels to expand upward, downward, left, and right from the image boundary
 
     return img, den
 
@@ -98,7 +98,7 @@ def norm_img_size(img, den, dst_size):
 
 def random_crop(img, den, dst_size):
     # dst_size：w,h
-    # 若宽高不够，则先将其等比放大至最小大小
+    # If the width and height are not enough, enlarge them proportionally to the minimum size first
     img, den = norm_img_size(img, den, dst_size)
     ts_hd, ts_wd, _ = img.shape
 
