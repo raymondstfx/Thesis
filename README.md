@@ -10,6 +10,46 @@ This project references the implementation of [MobileCount](https://github.com/C
 MobileCount builds upon the C³ framework, optimizing and lightening the model for mobile devices and resource-constrained environments.
 ### Introduction to C^3 Framework
 The C³ framework is a high-performance encoder-decoder framework designed for real-time crowd counting.
+#### Core Features:
+1. **Robust Baseline Models**
+2. **Convenient Development Toolkit**
+3. **Powerful Logging Features**
+
+#### Baseline Models:
+1. **AlexNet**: The padding of the conv1 and conv2 layers was slightly modified to ensure that they can be properly divided by the size of the feature map. At the same time, the network before conv5 was intercepted as the encoder for crowd counting, and its size was 1/16 of the original input. The design of the decoder follows the principle of simplicity, using "two layers of convolution + upsampling" to directly regress to the 1-channel density map.
+
+2. **VGG**: The original VGG and VGG+decoder with a simple decoding module. The encoder uses the first 10 convolutional layers of the VGG-16 model. VGG uses the simplest decoder, and VGG+decoder contains a simple three-layer deconvolution module.
+
+3. **ResNet**: The stride size of the first layer of res.layer3 was changed from 2 to 1 to ensure that the feature map size is not less than 1/8 of the original image. The encoder output features are decoded through two layers of convolution, following the principle of simplicity.
+
+| Model    | Features                                                                | Differences                                                                                       |
+|----------|-------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| AlexNet  | - Introduced ReLU activation.                                           | High computational cost with many parameters.                                                     |
+|          | - Used Dropout to mitigate overfitting.                                 |                                                                                                   |
+|          | - Overlapping max-pooling layers.                                       |                                                                                                   |
+|          | - Proposed data augmentation techniques.                                |                                                                                                   |
+| VGG      | - Used small 3x3 convolutional kernels to increase depth.               | Unified use of small kernels (3x3).                                                               |
+|          | - Repeated convolution and pooling blocks.                              | Increased depth for better performance but led to a larger parameter size.                        |
+|          | - Standardized architecture.                                            |                                                                                                   |
+| ResNet   | - Introduced residual blocks.                                           | Residual structure as a key innovation, allowing information to pass through without loss.        |
+|          | - Added skip connections to address gradient vanishing issues.          | Solving training issues in deep networks.                                                         |
+|          | - Enabled extremely deep networks.                                      |                                                                                                   |
+
+### Improvements in the MobileCount Model:
+
+1. **Incorporating MobileNet Design Principles**
+   
+3. **Simplified Model Architecture**
+
+4. **Refined Multi-Scale Feature Fusion**
+   
+5. **Dropout Regularization**
+
+## Result
+| Statistical Method | Original                       | With Improvement          |
+|--------------------|--------------------------------|---------------------------|
+| Best MAE           | 19.22                          | 16.08                     |
+| Best RMSE          | 28.33                          | 25.89                     |
 
 ## Deploy Project
 ```bash
