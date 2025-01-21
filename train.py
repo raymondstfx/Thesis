@@ -21,29 +21,29 @@ import argparse
 import time
 import random
 cfg = dict()
-cfg['gpu'] = ''  # GPU id to u se
+cfg['gpu'] = ''  # GPU id
 cfg[
     'task'] = 'mobilecount-multy-coonv-epoch500-BATCH32-no-bn'  # task is to use
 cfg['pre'] = "weights/" + cfg['task'] + "/" + cfg['task'] + '_checkpoint.pth'  # path to the pretrained model
 
-# 训练相关参数
-cfg['start_epoch'] = 0  # 起始epoch（影响学习率）
-cfg['epochs'] = 1000  # 总轮次vihicle
-cfg['best_prec1'] = 1e6  # 最优精度？
+# Related parameters
+cfg['start_epoch'] = 0  # Starting epoch (affects learning rate)
+cfg['epochs'] = 1000  # Total rounds vehicle
+cfg['best_prec1'] = 1e6  # Best accuracy
 cfg['best_rmse'] = 1e6
 cfg['best_psnr'] = 0
 cfg['best_ssim'] = 0
-cfg['original_lr'] = 1e-4  # 初始学习率
-cfg['lr'] = 1e-4  # 学习率（可变？）
-cfg['batch_size'] = 32  # batch_size仅为1？
-cfg['momentum'] = 0.95  # SGD动量
-cfg['decay'] = 1e-4  # 学习率衰减
-cfg['steps'] = [-1, 1, 100, 150]  # ？
-cfg['scales'] = [1, 1, 1, 1]  # ？
-cfg['workers'] = 4  # 线程数？
-cfg['seed'] = time.time()  # 随机种子？
+cfg['original_lr'] = 1e-4  # Starting learning rate
+cfg['lr'] = 1e-4  # Learning rate
+cfg['batch_size'] = 32  # batch_size
+cfg['momentum'] = 0.95  # SGD momentum
+cfg['decay'] = 1e-4  # Learning rate decay
+cfg['steps'] = [-1, 1, 100, 150]
+cfg['scales'] = [1, 1, 1, 1]
+cfg['workers'] = 4  # Number of threads
+cfg['seed'] = time.time()  # Random seed
 cfg['stand_by'] = 10
-cfg['print_freq'] = 10  # 打印队列？
+cfg['print_freq'] = 10  
 cfg['crop_size'] = [256, 256]
 cfg['SHHB.MEAN_STD'] = (
      [0.452016860247, 0.447249650955, 0.431981861591], [0.23242045939, 0.224925786257, 0.221840232611])
@@ -105,8 +105,8 @@ class listDataset(Dataset):
         gt_file = h5py.File(gt_path)
         target = np.asarray(gt_file['density'])
         if train:
-            if random.random() > 0.5 or 1:  # random() 方法返回随机生成的一个实数，它在[0,1)范围内。
-                target = np.fliplr(target).copy()  # np.fliplr作用是将数组在左右方向上翻转。
+            if random.random() > 0.5 or 1:  # The random() method returns a randomly generated real number in the range [0,1)
+                target = np.fliplr(target).copy()  # np.fliplr is used to flip the array left and right
                 img = np.fliplr(img).copy()
 
             if cfg['crop_size']:
@@ -210,12 +210,12 @@ def main():
 
 
 def train(train_list, model, criterion, optimizer, epoch):
-    # 记录损失、训练时间、数据加载时间
+    # Record loss, training time, data loading time
     losses = AverageMeter()
     batch_time = AverageMeter()
     data_time = AverageMeter()
 
-    # 读取训练数据（含数据增强）
+    # Read training data (including data enhancement)）
     train_loader = torch.utils.data.DataLoader(
         listDataset(train_list,
                     shuffle=True,
@@ -312,8 +312,8 @@ def validate(val_list, model, criterion):
         rmse += (output.data.sum() -
                  target.sum().type(torch.FloatTensor).cuda()) ** 2
 
-    mae = mae / len(test_loader)
-    rmse = math.sqrt(rmse / len(test_loader))
+    mae = mae / len(test_loader) / 100
+    rmse = math.sqrt(rmse / len(test_loader)) / 100
 
     print(' * MAE {mae:.3f} '
           .format(mae=mae))
