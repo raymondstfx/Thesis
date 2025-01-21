@@ -51,6 +51,10 @@ The C³ framework is a high-performance encoder-decoder framework designed for r
 | Best MAE           | 19.22                          | 16.08                     |
 | Best RMSE          | 28.33                          | 25.89                     |
 
+
+![Original Picture](pictures/IMG_1.jpg)
+![Heat Map](pictures/Compare1.png)
+
 ## Deploy Project
 ```bash
 git clone https://github.com/raymondstfx/Thesis.git
