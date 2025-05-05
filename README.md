@@ -106,3 +106,7 @@ To generate a density map, run:
 python visual.py
 ```
 It will be generated in the `Visual` folder.
+
+## Structure
+![image](https://github.com/user-attachments/assets/60ed9a7b-dbf4-4145-ac51-a25d94031d28)
+
