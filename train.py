@@ -21,7 +21,7 @@ import argparse
 import time
 import random
 cfg = dict()
-cfg['gpu'] = ''  # GPU id
+cfg['gpu'] = ''  # GPU id to u se
 cfg[
     'task'] = 'mobilecount-multy-coonv-epoch500-BATCH32-no-bn'  # task is to use
 cfg['pre'] = "weights/" + cfg['task'] + "/" + cfg['task'] + '_checkpoint.pth'  # path to the pretrained model
@@ -35,7 +35,7 @@ cfg['best_psnr'] = 0
 cfg['best_ssim'] = 0
 cfg['original_lr'] = 1e-4  # Starting learning rate
 cfg['lr'] = 1e-4  # Learning rate
-cfg['batch_size'] = 32  # batch_size
+cfg['batch_size'] = 32
 cfg['momentum'] = 0.95  # SGD momentum
 cfg['decay'] = 1e-4  # Learning rate decay
 cfg['steps'] = [-1, 1, 100, 150]
@@ -43,12 +43,12 @@ cfg['scales'] = [1, 1, 1, 1]
 cfg['workers'] = 4  # Number of threads
 cfg['seed'] = time.time()  # Random seed
 cfg['stand_by'] = 10
-cfg['print_freq'] = 10  
+cfg['print_freq'] = 10
 cfg['crop_size'] = [256, 256]
-cfg['SHHB.MEAN_STD'] = (
-     [0.452016860247, 0.447249650955, 0.431981861591], [0.23242045939, 0.224925786257, 0.221840232611])
+# cfg['SHHB.MEAN_STD'] = (
+#      [0.452016860247, 0.447249650955, 0.431981861591], [0.23242045939, 0.224925786257, 0.221840232611]) #SHB
 
-# cfg['SHHB.MEAN_STD'] = ([0.410824894905, 0.370634973049, 0.359682112932], [0.278580576181, 0.26925137639, 0.27156367898])  # SHA
+cfg['SHHB.MEAN_STD'] = ([0.410824894905, 0.370634973049, 0.359682112932], [0.278580576181, 0.26925137639, 0.27156367898]) #SHA
 
 # cfg['SHHB.MEAN_STD'] = (
 #     [0.413525998592, 0.378520160913, 0.371616870165], [0.284849464893, 0.277046442032, 0.281509846449])  # QNRF
@@ -59,14 +59,12 @@ os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 os.environ['MKL_THREADING_LAYER'] = 'GNU'
 os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 torch.cuda.manual_seed(cfg['seed'])
-part_B_train = os.path.join('C:/Thesis/Honours/datasets/part_B_final/test_data', 'images')
-part_B_test = os.path.join('C:/Thesis/Honours/datasets/part_B_final/train_data', 'images')
+part_B_train = os.path.join('C:/Honours/Thesis/datasets/part_A_final/test', 'images')
+part_B_test = os.path.join('C:/Honours/Thesis/datasets/part_A_final/train', 'images')
 cur_lr_list = []
 class listDataset(Dataset):
     def __init__(self, root, shape=None, shuffle=True, transform=None, train=False, seen=0, batch_size=1,
                  num_workers=4):
-        #         if train:
-        #             root = root * 4
         random.shuffle(root)
         self.nSamples = len(root)
         self.lines = root
@@ -84,15 +82,7 @@ class listDataset(Dataset):
         assert index <= len(self), 'index range error'
 
         img_path = self.lines[index]
-        #         print(img_path)
-
         img, target = self.load_data(img_path, self.train)
-
-        # img = 255.0 * F.to_tensor(img)
-
-        # img[0,:,:]=img[0,:,:]-92.8207477031
-        # img[1,:,:]=img[1,:,:]-95.2757037428
-        # img[2,:,:]=img[2,:,:]-104.877445883
 
         if self.transform is not None:
             img = self.transform(img)
@@ -100,7 +90,6 @@ class listDataset(Dataset):
 
     def load_data(self, img_path, train=True):
         gt_path = img_path.replace('.jpg', '.h5').replace('images', 'ground_truth')
-        #     print(gt_path)
         img = Image.open(img_path).convert('RGB')
         gt_file = h5py.File(gt_path)
         target = np.asarray(gt_file['density'])
@@ -169,8 +158,6 @@ def main():
 
     prec1 = cfg['best_prec1']
 
-    # In[37]:
-
     if os.path.isfile(cfg['task'] + '.json'):
         with open(cfg['task'] + '.json', 'r') as f:
             history = json.load(f)
@@ -215,7 +202,7 @@ def train(train_list, model, criterion, optimizer, epoch):
     batch_time = AverageMeter()
     data_time = AverageMeter()
 
-    # Read training data (including data enhancement)）
+    # Read training data (including data enhancement)
     train_loader = torch.utils.data.DataLoader(
         listDataset(train_list,
                     shuffle=True,
@@ -224,7 +211,7 @@ def train(train_list, model, criterion, optimizer, epoch):
                                                                     std=cfg['SHHB.MEAN_STD'][1]),
                     ]),
                     train=True,
-                    #                             seen=model.seen,
+
                     batch_size=cfg['batch_size'],
                     num_workers=cfg['workers']),
         batch_size=cfg['batch_size'])
@@ -241,9 +228,6 @@ def train(train_list, model, criterion, optimizer, epoch):
         img = Variable(img)
         output = model(img)
 
-        # print(output.shape)
-        # exit()
-        # -------------------------# -------------------------
         target = target.type(torch.FloatTensor).unsqueeze(1).cuda()
         target = Variable(target)
         # print(target.shape)
@@ -255,7 +239,6 @@ def train(train_list, model, criterion, optimizer, epoch):
         optimizer.zero_grad()
         loss.backward()
 
-        # -------------------------# -------------------------
         optimizer.step()
 
         batch_time.update(time.time() - end)
@@ -269,9 +252,6 @@ def train(train_list, model, criterion, optimizer, epoch):
                 .format(
                 epoch, i, len(train_loader), batch_time=batch_time,
                 data_time=data_time, loss=losses))
-    # scheduler.step()
-    # cfg['lr'] = optimizer.param_groups[-1]['lr']
-    # cfg['lr'] = scheduler.get_lr()[0]
 
     return losses.avg
 
@@ -291,13 +271,8 @@ def validate(val_list, model, criterion):
 
     mae = 0
     rmse = 0
-    #     psnr = 0
-    #     ssim = 0
 
     for i, (img, target) in enumerate(test_loader):
-
-        #         print(val_list)
-
         img = img.cuda()
         img = Variable(img)
         if hasattr(torch.cuda, 'empty_cache'):
