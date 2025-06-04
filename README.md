@@ -48,8 +48,8 @@ The C³ framework is a high-performance encoder-decoder framework designed for r
 ## Result
 | Statistical Method | Original                       | With Improvement          |
 |--------------------|--------------------------------|---------------------------|
-| Best MAE           | 19.22                          | 16.08                     |
-| Best RMSE          | 28.33                          | 25.89                     |
+| Best MAE           | 19.22                          | 15.46                    |
+| Best RMSE          | 28.33                          | 24.23                     |
 
 
 ![Original Picture](pictures/IMG_1.jpg)
